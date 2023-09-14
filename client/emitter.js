@@ -1,4 +1,4 @@
-function createEmitter() {
+export function createEmitter() {
     const listeners = {};
 
     const _register = (subject, listenerFn) => {
