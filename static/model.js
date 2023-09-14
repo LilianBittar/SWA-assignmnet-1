@@ -1,6 +1,6 @@
 const { type } = require("express/lib/response")
 
-function event(time, place) {
+export function event(time, place) {
     const getTime = () => time
     const getPlace = () => place
     return {
@@ -8,7 +8,7 @@ function event(time, place) {
     } 
 }
 
-function weatherData(value, type, unit, event) {
+export function weatherData(value, type, unit, event) {
     const getValue = () => value
     const getType = () => type
     const getUnit = () => unit
@@ -17,7 +17,7 @@ function weatherData(value, type, unit, event) {
     }
 }
 
-function temperature(weatherData) {
+export function temperature(weatherData) {
     const convertToF = () => weatherData.getUnit() === 'F' ? weatherData.getValue() : weatherData.getValue() * 1.8 + 32
     const convertToC = () => weatherData.getUnit() === 'C' ? weatherData.getValue() : (weatherData.getValue() - 32) * 5/9
     return {
@@ -25,8 +25,8 @@ function temperature(weatherData) {
     }
 }
 
-function precipitation(weatherData) {
-    const getPrecipitationType = () => weatherData.getType()
+export function precipitation(precipitationType, weatherData) {
+    const getPrecipitationType = () => precipitationType
     const convertToInches = () => weatherData.getUnit() === 'inches' ? weatherData.getValue() : weatherData.getValue() / 25.4
     const convertToMM = () => weatherData.getUnit() === 'mm' ? weatherData.getValue() : weatherData.getValue() * 25.4
     return {
@@ -34,8 +34,8 @@ function precipitation(weatherData) {
     }
 }
 
-function wind(weatherData) {
-    const getDirection = () => weatherData.getType()
+export function wind(direction, weatherData) {
+    const getDirection = () => direction
     const convertToMPH = () => weatherData.getUnit() === 'mph' ? weatherData.getValue() : weatherData.getValue() * 2.237
     const convertToMS = () => weatherData.getUnit() === 'm/s' ? weatherData.getValue() : weatherData.getValue() / 2.237
     return {
@@ -45,12 +45,12 @@ function wind(weatherData) {
 
 const cloudCoverge = weatherData
 
-function weatherPrediction(max, min, type, unit, event) {
+export function weatherPrediction(max, min, type, unit, event) {
     const getMax = () => max
     const getMin = () => min
     const getType = () => type
     const matches = (data) => {
-        return event.getTime() === data.getTime() && event.getPlace() === data.getPlace() && type === data.getType()
+        return data.getValue() >= min && data.getValue() <= max && data.getUnit() === unit && event.getPlace() === data.getPlace() && type === data.getType()
     }
     const getUnit = () => unit
     return {
@@ -58,7 +58,7 @@ function weatherPrediction(max, min, type, unit, event) {
     }
 }
 
-function temperaturePrediction(weatherPrediction) {
+export function temperaturePrediction(weatherPrediction) {
     const convertToF = () => weatherPrediction.getUnit() === 'F' ? weatherPrediction.getMax() : weatherPrediction.getMax() * 1.8 + 32
     const convertToC = () => weatherPrediction.getUnit() === 'C' ? weatherPrediction.getMax() : (weatherPrediction.getMax() - 32) * 5/9
     return {
@@ -66,7 +66,7 @@ function temperaturePrediction(weatherPrediction) {
     }
 }
 
-function precipitationPrediction(expectedTypes, weatherPrediction) {
+export function precipitationPrediction(expectedTypes, weatherPrediction) {
     const getExpectedTypes = () => expectedTypes
     const convertToInches = () => weatherPrediction.getUnit() === 'inches' ? weatherPrediction.getMax() : weatherPrediction.getMax() / 25.4
     const convertToMM = () => weatherPrediction.getUnit() === 'mm' ? weatherPrediction.getMax() : weatherPrediction.getMax() * 25.4
@@ -78,7 +78,7 @@ function precipitationPrediction(expectedTypes, weatherPrediction) {
     }
 }
 
-function windPrediction(expectedDirections, weatherPrediction) {
+export function windPrediction(expectedDirections, weatherPrediction) {
     const getExpectedDirections = () => expectedDirections
     const convertToMPH = () => weatherPrediction.getUnit() === 'mph' ? weatherPrediction.getMax() : weatherPrediction.getMax() * 2.237
     const convertToMS = () => weatherPrediction.getUnit() === 'm/s' ? weatherPrediction.getMax() : weatherPrediction.getMax() / 2.237
@@ -91,4 +91,3 @@ function windPrediction(expectedDirections, weatherPrediction) {
 }
 
 const cloudCoveragePrediction = weatherPrediction
-
