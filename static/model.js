@@ -132,7 +132,8 @@ export function precipitationPrediction(expectedTypes, weatherPrediction) {
     };
     return {
         ...weatherPrediction,
-        getPrecipitationType,
+        matches,
+        getExpectedTypes,
         convertToInches,
         convertToMM,
     };
@@ -158,6 +159,8 @@ export function windPrediction(expectedDirections, weatherPrediction) {
     return {
         ...weatherPrediction,
         getDirection,
+        getExpectedDirections,
+        matches,
         convertToMPH,
         convertToMS,
     };

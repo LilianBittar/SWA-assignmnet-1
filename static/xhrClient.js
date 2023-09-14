@@ -38,6 +38,82 @@ export function xhrApiClient(baseUrl) {
         });
     };
 
+    const POST = "POST";
+    const _postJson = async (endpoint, data) => {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open(POST, `${baseUrl}/${endpoint}`);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = () => {
+                if (xhr.status < 200 || xhr.status > 299) {
+                    reject();
+                }
+
+                resolve(JSON.parse(xhr.responseText));
+            };
+            xhr.send(JSON.stringify(data));
+        });
+    };
+
+    const _mapPredicitons = (data) => {
+        return {
+            temperatures: data
+                .filter((d) => d.type === "temperature")
+                .map((d) =>
+                    temperaturePrediction(
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            precipitations: data
+                .filter((d) => d.type === "precipitation")
+                .map((d) =>
+                    precipitationPrediction(
+                        d.precipitation_types,
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            wind: data
+                .filter((d) => d.type === "wind")
+                .map((d) =>
+                    wind(
+                        d.directions,
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            temperaturePredictions: data
+                .filter((d) => d.type === "temperature")
+                .map((d) =>
+                    temperaturePrediction(
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+        };
+    };
+
     const data = {
         get: async function () {
             const data = await _getJson("data");
@@ -45,6 +121,12 @@ export function xhrApiClient(baseUrl) {
                 weatherData(d.value, d.type, d.unit, event(d.time, d.place))
             );
         },
+
+        post: async function (data) {
+            const res = await _postJson(data);
+            return res;
+        },
+
         place: async function (place) {
             return {
                 get: async function () {
@@ -64,63 +146,16 @@ export function xhrApiClient(baseUrl) {
 
     const forecast = {
         get: async function () {
-            const res = await fetch("http://localhost:8080/forecast");
-            const data = await res.json();
+            const data = await _getJson("forecast");
+            return _mapPredicitons(data);
+        },
+
+        place: function (place) {
             return {
-                temperatures: data
-                    .filter((d) => d.type === "temperature")
-                    .map((d) =>
-                        temperaturePrediction(
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                precipitations: data
-                    .filter((d) => d.type === "precipitation")
-                    .map((d) =>
-                        precipitationPrediction(
-                            d.precipitation_types,
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                wind: data
-                    .filter((d) => d.type === "wind")
-                    .map((d) =>
-                        wind(
-                            d.directions,
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                temperaturePredictions: data
-                    .filter((d) => d.type === "temperature")
-                    .map((d) =>
-                        temperaturePrediction(
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
+                get: async function () {
+                    const data = await _getJson(`forecast/${place}`);
+                    return _mapPredicitons(data);
+                },
             };
         },
     };
