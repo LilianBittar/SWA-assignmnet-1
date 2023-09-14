@@ -7,7 +7,9 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "prestart": "npm run build",
         "start": "node ./dist/server.js",
-        "build": "webpack"
+        "build": "npm run buildClient && npm run buildServer",
+        "buildClient": "webpack --config webpack.client.config.js",
+        "buildServer": "webpack --config webpack.server.config.js"
     },
     "repository": {
         "type": "git",
@@ -28,7 +30,9 @@
         "@babel/preset-env": "^7.22.15",
         "babel-loader": "^9.1.3",
         "html-webpack-plugin": "^5.5.3",
+        "node-polyfill-webpack-plugin": "^2.0.1",
         "webpack": "^5.88.2",
-        "webpack-cli": "^5.1.4"
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^4.15.1"
     }
 }

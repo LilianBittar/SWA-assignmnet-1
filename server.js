@@ -18,7 +18,7 @@ app.use(function (_, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PATCH");
     next();
 });
-app.use(express.static("static"));
+app.use("/", express.static(__dirname + "/static"));
 
 const wss = new WebSocket.Server({ port: web_socket_port, path: "/warnings" });
 

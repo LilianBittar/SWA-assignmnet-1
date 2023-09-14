@@ -1,16 +1,11 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     target: "node",
-    entry: {
-        server: "./serverIndex.js",
-        "static/client": "./static/clientIndex.js",
-    },
+    entry: "./serverIndex.js",
     output: {
-        filename: "[name].js",
+        filename: "server.js",
         path: path.resolve(__dirname, "dist"),
-        clean: true,
     },
     module: {
         rules: [
@@ -28,10 +23,7 @@ module.exports = {
             },
         ],
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: "./static/index.html",
-            filename: path.resolve(__dirname, "dist/static/index.html"),
-        }),
-    ],
+    node: {
+        __dirname: false,
+    },
 };

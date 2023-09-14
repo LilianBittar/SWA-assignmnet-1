@@ -16,9 +16,9 @@ import {
  * @param baseUrl {string}
  *
  */
-async function xhrApiClient(baseUrl) {
+export function xhrApiClient(baseUrl) {
     if (!baseUrl) {
-        baseUrl = "localhost:8080";
+        baseUrl = "http://localhost:8080";
     }
 
     const GET = "GET";
@@ -48,10 +48,7 @@ async function xhrApiClient(baseUrl) {
         place: async function (place) {
             return {
                 get: async function () {
-                    const res = await fetch(
-                        `http://localhost:8080/data/${place}`
-                    );
-                    const data = await res.json();
+                    const data = await _getJson(`data/${place}`);
                     return data.map((d) =>
                         weatherData(
                             d.value,
@@ -125,10 +122,11 @@ async function xhrApiClient(baseUrl) {
                         )
                     ),
             };
-
-            data.map((d) =>
-                weatherData(d.value, d.type, d.unit, event(d.time, d.place))
-            );
         },
+    };
+
+    return {
+        data,
+        forecast,
     };
 }
