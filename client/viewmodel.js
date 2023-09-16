@@ -5,6 +5,10 @@ export function createViewModel(model) {
     let aarhusWeatherData = createBindableObjectProperty();
     let copenhagenWeatherData = createBindableObjectProperty();
 
+    let horsensForecast = createBindableObjectProperty();
+    let aarhusForecast = createBindableObjectProperty();
+    let copenhagenForecast = createBindableObjectProperty();
+
     model.subscribeToWeatherData("Horsens", (data) =>
         horsensWeatherData.setProperty(data)
     );
@@ -15,9 +19,22 @@ export function createViewModel(model) {
         copenhagenWeatherData.setProperty(data)
     );
 
+    model.subscribeToForecastUpdates("Horsens", (data) => {
+        horsensForecast.setProperty(data);
+    });
+    model.subscribeToForecastUpdates("Aarhus", (data) => {
+        aarhusForecast.setProperty(data);
+    });
+    model.subscribeToForecastUpdates("Copenhagen", (data) => {
+        copenhagenForecast.setProperty(data);
+    });
+
     return {
         horsensWeatherData,
         aarhusWeatherData,
         copenhagenWeatherData,
+        horsensForecast,
+        aarhusForecast,
+        copenhagenForecast,
     };
 }

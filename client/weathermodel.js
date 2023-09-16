@@ -58,7 +58,7 @@ export function createWeatherModel(client) {
             .get()
             .then((d) => _emitter.emit(_forecastUpdateSubjects["Horsens"], d));
         getWeatherData();
-    }, ONE_MINUTE);
+    }, 1000);
 
     /***
      * Valid places: All | Horsens | Aarhus | Copenhagen

@@ -158,7 +158,6 @@ export function windPrediction(expectedDirections, weatherPrediction) {
     };
     return {
         ...weatherPrediction,
-        getDirection,
         getExpectedDirections,
         matches,
         convertToMPH,

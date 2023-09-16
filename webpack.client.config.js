@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: "./client/index.js",
@@ -32,6 +33,9 @@ module.exports = {
             template: "./static/index.html",
             filename: path.resolve(__dirname, "dist/static/index.html"),
         }),
+        new CopyPlugin({
+            patterns: [{ from: "static/styles.css", to: "static" }],
+        }),
     ],
     resolve: {
         fallback: {
@@ -44,7 +48,6 @@ module.exports = {
             https: false,
             stream: false,
             crypto: false,
-            "crypto-browserify": require.resolve("crypto-browserify"), //if you want to use this module also don't forget npm i crypto-browserify
         },
     },
 };

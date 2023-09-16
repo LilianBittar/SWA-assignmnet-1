@@ -10,6 +10,7 @@ import {
     wind,
     cloudCoverge,
     cloudCoveragePrediction,
+    windPrediction,
 } from "./model";
 
 /***
@@ -90,21 +91,8 @@ export function xhrApiClient(baseUrl) {
             wind: data
                 .filter((d) => d.type === "wind speed")
                 .map((d) =>
-                    wind(
+                    windPrediction(
                         d.directions,
-                        weatherPrediction(
-                            d.to,
-                            d.from,
-                            d.type,
-                            d.unit,
-                            event(d.time, d.place)
-                        )
-                    )
-                ),
-            temperaturePredictions: data
-                .filter((d) => d.type === "temperature")
-                .map((d) =>
-                    temperaturePrediction(
                         weatherPrediction(
                             d.to,
                             d.from,

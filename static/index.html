@@ -33,7 +33,7 @@
                     <th>Temperature</th>
                     <th>Time</th>
                     <tbody id="horsens-temperature-data">
-                        <tr>
+                        <tr id="horsens-latest-temperaure-data">
                             <td>10 C</td>
                             <td>12.00.0</td>
                         </tr>
@@ -45,7 +45,7 @@
                     <th>Time</th>
                     <th>Type</th>
                     <tbody id="horsens-precipitation-data">
-                        <tr>
+                        <tr id="horsens-latest-precipitation-data">
                             <td>10 mm</td>
                             <td>12.00.0</td>
                             <td>sleet</td>
@@ -58,7 +58,7 @@
                     <th>Time</th>
                     <th>Direction</th>
                     <tbody id="horsens-wind-data">
-                        <tr>
+                        <tr id="horsens-latest-wind-data">
                             <td>10 m/s</td>
                             <td>12.00.0</td>
                             <td>North</td>
@@ -70,7 +70,7 @@
                     <th>Cloud Coverage</th>
                     <th>Time</th>
                     <tbody id="horsens-cloud-data">
-                        <tr>
+                        <tr id="horsens-latest-cloud-data">
                             <td>10 %</td>
                             <td>12.00.0</td>
                         </tr>
@@ -80,45 +80,10 @@
 
             <h3>Forecast</h3>
             <div class="data-container">
-                <table>
-                    <th>00</th>
-                    <th>01</th>
-                    <th>02</th>
-                    <th>03</th>
-                    <th>04</th>
-                    <th>05</th>
-                    <th>06</th>
-                    <th>07</th>
-                    <th>08</th>
-                    <th>09</th>
-                    <th>10</th>
-                    <th>11</th>
-                    <th>12</th>
-                    <th>13</th>
-                    <th>14</th>
-                    <th>15</th>
-                    <th>16</th>
-                    <th>17</th>
-                    <th>18</th>
-                    <th>19</th>
-                    <th>20</th>
-                    <th>21</th>
-                    <th>23</th>
-                    <tbody>
-                        <tr>
-                            <td>10 C</td>
-                        </tr>
-                        <tr>
-                            <td>10 m/s north</td>
-                        </tr>
-                        <tr>
-                            <td>10%</td>
-                        </tr>
-                        <tr>
-                            <td>10 mm sleet</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="horsens-tempreature-forecast"></div>
+                <div id="horsens-precipitation-forecast"></div>
+                <div id="horsens-wind-forecast"></div>
+                <div id="horsens-cloud-forecast"></div>
             </div>
         </div>
 
