@@ -1,24 +1,38 @@
 {
-  "name": "weather_report",
-  "version": "0.1.0",
-  "description": "Weather report server serving fake data",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/olehougaard/weather_report.git"
-  },
-  "author": "Ole Ildsgaard Hougaard",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/olehougaard/weather_report/issues"
-  },
-  "homepage": "https://github.com/olehougaard/weather_report#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "ws": "^7.1.1"
-  }
+    "name": "weather_report",
+    "version": "0.1.0",
+    "description": "Weather report server serving fake data",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prestart": "npm run build",
+        "start": "node ./dist/server.js",
+        "build": "npm run buildClient && npm run buildServer",
+        "buildClient": "webpack --config webpack.client.config.js",
+        "buildServer": "webpack --config webpack.server.config.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/olehougaard/weather_report.git"
+    },
+    "author": "Ole Ildsgaard Hougaard",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/olehougaard/weather_report/issues"
+    },
+    "homepage": "https://github.com/olehougaard/weather_report#readme",
+    "dependencies": {
+        "express": "^4.17.1",
+        "ws": "^7.1.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.22.17",
+        "@babel/preset-env": "^7.22.15",
+        "babel-loader": "^9.1.3",
+        "html-webpack-plugin": "^5.5.3",
+        "node-polyfill-webpack-plugin": "^2.0.1",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^4.15.1"
+    }
 }
