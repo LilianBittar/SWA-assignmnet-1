@@ -7,6 +7,9 @@ import {
     temperaturePrediction,
     precipitationPrediction,
     weatherPrediction,
+    wind,
+    cloudCoverge,
+    cloudCoveragePrediction,
 } from "./model";
 
 /***
@@ -85,7 +88,7 @@ export function xhrApiClient(baseUrl) {
                     )
                 ),
             wind: data
-                .filter((d) => d.type === "wind")
+                .filter((d) => d.type === "wind speed")
                 .map((d) =>
                     wind(
                         d.directions,
@@ -111,15 +114,77 @@ export function xhrApiClient(baseUrl) {
                         )
                     )
                 ),
+            cloudCoverages: data
+                .filter((d) => d.type === "cloud coverage")
+                .map((d) =>
+                    cloudCoveragePrediction(
+                        d.to,
+                        d.from,
+                        d.type,
+                        d.unit,
+                        event(d.time, d.place)
+                    )
+                ),
+        };
+    };
+
+    const _mapWeatherData = (data) => {
+        return {
+            temperatures: data
+                .filter((d) => d.type === "temperature")
+                .map((d) =>
+                    temperature(
+                        weatherData(
+                            d.value,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            precipitations: data
+                .filter((d) => d.type === "precipitation")
+                .map((d) =>
+                    precipitation(
+                        p.precipitation_type,
+                        weatherData(
+                            d.value,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            wind: data
+                .filter((d) => d.type === "wind speed")
+                .map((d) =>
+                    wind(
+                        d.direction,
+                        weatherData(
+                            d.value,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            cloudCoverages: data
+                .filter((d) => d.type === "cloud coverage")
+                .map((d) =>
+                    cloudCoverge(
+                        d.value,
+                        d.type,
+                        d.unit,
+                        event(d.time, d.place)
+                    )
+                ),
         };
     };
 
     const data = {
         get: async function () {
             const data = await _getJson("data");
-            return data.map((d) =>
-                weatherData(d.value, d.type, d.unit, event(d.time, d.place))
-            );
+            return _mapWeatherData(data);
         },
 
         post: async function (data) {
@@ -131,14 +196,7 @@ export function xhrApiClient(baseUrl) {
             return {
                 get: async function () {
                     const data = await _getJson(`data/${place}`);
-                    return data.map((d) =>
-                        weatherData(
-                            d.value,
-                            d.type,
-                            d.unit,
-                            event(d.time, d.place)
-                        )
-                    );
+                    return _mapWeatherData(data);
                 },
             };
         },

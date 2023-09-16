@@ -71,7 +71,7 @@ export function wind(direction, weatherData) {
     };
 }
 
-const cloudCoverge = weatherData;
+export const cloudCoverge = weatherData;
 
 export function weatherPrediction(max, min, type, unit, event) {
     const getMax = () => max;
