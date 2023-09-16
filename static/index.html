@@ -1,13 +1,319 @@
 <html>
-    <head> </head>
+    <head>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
     <body>
         <div>
-            <h1>Static Page</h1>
-            <p>This is a static page.</p>
-            <p></p>
+            <h1>Weather</h1>
         </div>
 
-        <div id="test-div"></div>
+        <div>
+            <h2>Horsens</h2>
+            <h3>Data</h3>
+            <table>
+                <thead>
+                    <th>Last day's max temperature</th>
+                    <th>Last day's min temperature</th>
+                    <th>Last day's total precipitation</th>
+                    <th>Last day's avg wind speed</th>
+                </thead>
+
+                <tbody id="horsens-summary">
+                    <tr>
+                        <td>10 C</td>
+                        <td>0 C</td>
+                        <td>10 mm</td>
+                        <td>20 m/s</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="data-container">
+                <table>
+                    <th>Temperature</th>
+                    <th>Time</th>
+                    <tbody id="horsens-temperature-data">
+                        <tr>
+                            <td>10 C</td>
+                            <td>12.00.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Precipitaton</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <tbody id="horsens-precipitation-data">
+                        <tr>
+                            <td>10 mm</td>
+                            <td>12.00.0</td>
+                            <td>sleet</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Wind Speed</th>
+                    <th>Time</th>
+                    <th>Direction</th>
+                    <tbody id="horsens-wind-data">
+                        <tr>
+                            <td>10 m/s</td>
+                            <td>12.00.0</td>
+                            <td>North</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Cloud Coverage</th>
+                    <th>Time</th>
+                    <tbody id="horsens-cloud-data">
+                        <tr>
+                            <td>10 %</td>
+                            <td>12.00.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Forecast</h3>
+            <div class="data-container">
+                <table>
+                    <th>00</th>
+                    <th>01</th>
+                    <th>02</th>
+                    <th>03</th>
+                    <th>04</th>
+                    <th>05</th>
+                    <th>06</th>
+                    <th>07</th>
+                    <th>08</th>
+                    <th>09</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>13</th>
+                    <th>14</th>
+                    <th>15</th>
+                    <th>16</th>
+                    <th>17</th>
+                    <th>18</th>
+                    <th>19</th>
+                    <th>20</th>
+                    <th>21</th>
+                    <th>23</th>
+                    <tbody>
+                        <tr>
+                            <td>10 C</td>
+                        </tr>
+                        <tr>
+                            <td>10 m/s north</td>
+                        </tr>
+                        <tr>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>10 mm sleet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <h2>Aarhus</h2>
+            <h3>Data</h3>
+
+            <div class="data-container">
+                <table>
+                    <th>Temperature</th>
+                    <th>Time</th>
+                    <tbody id="aarhus-temperature-data">
+                        <tr>
+                            <td>10 C</td>
+                            <td>12.00.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Precipitaton</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <tbody id="aarhus-precipitation-data">
+                        <tr>
+                            <td>10 mm</td>
+                            <td>12.00.0</td>
+                            <td>sleet</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Wind Speed</th>
+                    <th>Time</th>
+                    <th>Direction</th>
+                    <tbody id="aarhus-wind-data">
+                        <tr>
+                            <td>10 m/s</td>
+                            <td>12.00.0</td>
+                            <td>North</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Cloud Coverage</th>
+                    <th>Time</th>
+                    <tbody id="aarhus-cloud-data">
+                        <tr>
+                            <td>10 %</td>
+                            <td>12.00.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Forecast</h3>
+            <div class="data-container">
+                <table>
+                    <th>00</th>
+                    <th>01</th>
+                    <th>02</th>
+                    <th>03</th>
+                    <th>04</th>
+                    <th>05</th>
+                    <th>06</th>
+                    <th>07</th>
+                    <th>08</th>
+                    <th>09</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>13</th>
+                    <th>14</th>
+                    <th>15</th>
+                    <th>16</th>
+                    <th>17</th>
+                    <th>18</th>
+                    <th>19</th>
+                    <th>20</th>
+                    <th>21</th>
+                    <th>23</th>
+                    <tbody>
+                        <tr>
+                            <td>10 C</td>
+                        </tr>
+                        <tr>
+                            <td>10 m/s north</td>
+                        </tr>
+                        <tr>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>10 mm sleet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <h2>Copenhagen</h2>
+            <h3>Data</h3>
+            <div class="data-container">
+                <table>
+                    <th>Temperature</th>
+                    <th>Time</th>
+                    <tbody id="copenhagen-temperature-data">
+                        <tr>
+                            <td>10 C</td>
+                            <td>12.00.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Precipitaton</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <tbody id="copenhagen-precipitation-data">
+                        <tr>
+                            <td>10 mm</td>
+                            <td>12.00.0</td>
+                            <td>sleet</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Wind Speed</th>
+                    <th>Time</th>
+                    <th>Direction</th>
+                    <tbody id="copenhagen-wind-data">
+                        <tr>
+                            <td>10 m/s</td>
+                            <td>12.00.0</td>
+                            <td>North</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <th>Cloud Coverage</th>
+                    <th>Time</th>
+                    <tbody id="copenhagen-cloud-data">
+                        <tr>
+                            <td>10 %</td>
+                            <td>12.00.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Forecast</h3>
+            <div class="data-container">
+                <table>
+                    <th>00</th>
+                    <th>01</th>
+                    <th>02</th>
+                    <th>03</th>
+                    <th>04</th>
+                    <th>05</th>
+                    <th>06</th>
+                    <th>07</th>
+                    <th>08</th>
+                    <th>09</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>13</th>
+                    <th>14</th>
+                    <th>15</th>
+                    <th>16</th>
+                    <th>17</th>
+                    <th>18</th>
+                    <th>19</th>
+                    <th>20</th>
+                    <th>21</th>
+                    <th>23</th>
+                    <tbody>
+                        <tr>
+                            <td>10 C</td>
+                        </tr>
+                        <tr>
+                            <td>10 m/s north</td>
+                        </tr>
+                        <tr>
+                            <td>10%</td>
+                        </tr>
+                        <tr>
+                            <td>10 mm sleet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <script type="text/javascript" src="/client.js"></script>
     </body>
 </html>

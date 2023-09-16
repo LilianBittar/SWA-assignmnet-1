@@ -1,13 +1,23 @@
 import { createBindableObjectProperty } from "./bindableProperty";
 
 export function createViewModel(model) {
-    let allWeatherDataProperty = createBindableObjectProperty();
+    let horsensWeatherData = createBindableObjectProperty();
+    let aarhusWeatherData = createBindableObjectProperty();
+    let copenhagenWeatherData = createBindableObjectProperty();
 
-    model.subscribeToWeatherData("All", (data) =>
-        allWeatherDataProperty.setProperty(data)
+    model.subscribeToWeatherData("Horsens", (data) =>
+        horsensWeatherData.setProperty(data)
+    );
+    model.subscribeToWeatherData("Aarhus", (data) =>
+        aarhusWeatherData.setProperty(data)
+    );
+    model.subscribeToWeatherData("Copenhagen", (data) =>
+        copenhagenWeatherData.setProperty(data)
     );
 
     return {
-        allWeatherDataProperty,
+        horsensWeatherData,
+        aarhusWeatherData,
+        copenhagenWeatherData,
     };
 }
