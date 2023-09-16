@@ -1,11 +1,13 @@
-import { createBindableStringProperty } from "./bindableProperty";
+import { createBindableObjectProperty } from "./bindableProperty";
 
 export function createViewModel(model) {
-    let testProperty = createBindableStringProperty("TEST");
+    let allWeatherDataProperty = createBindableObjectProperty();
 
-    model.onNewNumber((number) => testProperty.setProperty(number));
+    model.subscribeToWeatherData("All", (data) =>
+        allWeatherDataProperty.setProperty(data)
+    );
 
     return {
-        testProperty,
+        allWeatherDataProperty,
     };
 }

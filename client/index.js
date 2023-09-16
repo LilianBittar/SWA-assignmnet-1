@@ -1,7 +1,7 @@
 import { createViewModel } from "./viewmodel";
 import { initView } from "./view";
 import { xhrApiClient } from "./xhrClient";
-import { createDummyModel } from "./dummyModel";
+import { createWeatherModel } from "./weathermodel";
 
 const client = xhrApiClient("http://localhost:8080");
 
@@ -11,9 +11,7 @@ client.forecast
     .then((d) => console.log(d));
 console.log("Client loaded");
 
-const model = createDummyModel();
+const model = createWeatherModel("xhr");
 const viewModel = createViewModel(model);
-
-model.start();
 
 initView(viewModel);

@@ -146,7 +146,7 @@ export function xhrApiClient(baseUrl) {
                 .filter((d) => d.type === "precipitation")
                 .map((d) =>
                     precipitation(
-                        p.precipitation_type,
+                        d.precipitation_type,
                         weatherData(
                             d.value,
                             d.type,
@@ -192,7 +192,7 @@ export function xhrApiClient(baseUrl) {
             return res;
         },
 
-        place: async function (place) {
+        place: function (place) {
             return {
                 get: async function () {
                     const data = await _getJson(`data/${place}`);
