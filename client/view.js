@@ -1,3 +1,4 @@
+// Horsens
 export const initView = (viewModel) => {
     const horsensTemperatureForecast = document.querySelector(
         "#horsens-tempreature-forecast"
@@ -31,6 +32,10 @@ export const initView = (viewModel) => {
         "#horsens-latest-cloud-data"
     );
 
+    const horsensLastDayData = document.querySelector(
+        "#horsens-last-day-data"
+    );
+
     const getHour = (data) => {
         return data.getTime().split("T")[1].slice(0, 2);
     };
@@ -39,6 +44,82 @@ export const initView = (viewModel) => {
         while (node.hasChildNodes()) {
             node.removeChild(node.firstChild);
         }
+    };
+
+    const updateLastDayData = (data) => {
+        const maxTemp = document.createElement("td");
+        const minTemp = document.createElement("td");
+        const totalPrec = document.createElement("td");
+        const windSpeed = document.createElement("td");
+
+        const temps = data.temperatures
+            .map((t) => {
+                return {
+                    temperature: t.getValue(),
+                    unit: t.getUnit(),
+                    time: new Date(t.getTime()),
+                };
+            });
+        const pres = data.precipitations
+            .map((p) => {
+                return {
+                    precipiation: p.getValue(),
+                    unit: p.getUnit(),
+                    time: new Date(p.getTime()),
+                    type: p.getPrecipitationType(),
+                };
+            });
+        const winds = data.wind
+        .map((w) => {
+            return {
+                wind: w.getValue(),
+                unit: w.getUnit(),
+                time: new Date(w.getTime()),
+                direction: w.getDirection(),
+            };
+        });
+
+
+        const today = new Date();
+        const lastDayStart = new Date(today);
+        lastDayStart.setDate(today.getDay() - 1);
+        const lastDayEnd = new Date(today);
+
+        //temp
+        const lastDayTemp = temps.filter((t) => {
+            return t.time >= lastDayStart && t.time <= lastDayEnd;
+        });
+        const lastDayTempSort = lastDayTemp.sort((a, b) => a.temperature - b.temperature);
+
+        maxTemp.textContent =
+            `${lastDayTempSort[lastDayTemp.length - 1].temperature} ${lastDayTempSort[lastDayTemp.length - 1].unit}`;
+        minTemp.textContent = `${lastDayTemp[0].temperature} ${lastDayTemp[0].unit}`;
+
+        //pres
+        const lastDayPres = pres.filter((p) => {
+            return p.time >= lastDayStart && p.time <= lastDayEnd;
+        });
+        const lastDayPresSum = lastDayPres.reduce((total, value) => {
+            return total + value.precipiation
+        });
+        const avgPres = lastDayPresSum / lastDayPres.length;
+        totalPrec.textContent = `${avgPres}`;
+
+        //wind
+        const lastDayWind = winds.filter((w) => {
+            return w.time >= lastDayStart && w.time <= lastDayEnd;
+        });
+        const lastDayWindSum = lastDayWind.reduce((total, value) => {
+            return total + value.wind
+        });
+        const avgWind = lastDayWindSum / lastDayWind.length;
+        windSpeed.textContent = `${avgWind}`;
+
+        clearChildNodes(horsensLastDayData);
+        horsensLastDayData.appendChild(maxTemp);
+        horsensLastDayData.appendChild(minTemp);
+        horsensLastDayData.appendChild(totalPrec);
+        horsensLastDayData.appendChild(windSpeed);
     };
 
     const updateLatestTemperature = (data) => {
@@ -130,6 +211,7 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation(data);
         updateLatestWind(data);
         updateLatestCloud(data);
+        updateLastDayData(data);
     });
 
     viewModel.horsensForecast.bind((data) => {
