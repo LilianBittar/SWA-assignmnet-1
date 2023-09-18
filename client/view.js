@@ -14,10 +14,13 @@ export const initView = (viewModel) => {
         precipitation: {},
     };
 
+    const lastDayElements = {};
+
     const updateLocators = () => {
         const cities = ["horsens", "aarhus", "copenhagen"];
         const dataTypes = ["temperature", "precipitation", "wind", "cloud"];
         cities.forEach((c) => {
+            lastDayElements[c] = document.querySelector(`#${c}-last-day-data`);
             dataTypes.forEach((t) => {
                 forecastElements[t][c] = document.querySelector(
                     `#${c}-${t}-forecast`
@@ -28,8 +31,6 @@ export const initView = (viewModel) => {
             });
         });
     };
-
-    const horsensLastDayData = document.querySelector("#horsens-last-day-data");
 
     const getHour = (data) => {
         return data.getTime().split("T")[1].slice(0, 2);
@@ -44,11 +45,14 @@ export const initView = (viewModel) => {
         }
     };
 
-    const updateLastDayData = (data) => {
+    const updateLastDayData = (city, data) => {
         const maxTemp = document.createElement("td");
         const minTemp = document.createElement("td");
         const totalPrec = document.createElement("td");
         const windSpeed = document.createElement("td");
+
+        updateLocators();
+        const nodeToUpdate = lastDayElements[city];
 
         const temps = data.temperatures.map((t) => {
             return {
@@ -112,11 +116,11 @@ export const initView = (viewModel) => {
         const avgWind = lastDayWindSum / lastDayWind.length;
         windSpeed.textContent = `${avgWind.toFixed(2)} ${lastDayWind[0].unit}`;
 
-        clearChildNodes(horsensLastDayData);
-        horsensLastDayData.appendChild(maxTemp);
-        horsensLastDayData.appendChild(minTemp);
-        horsensLastDayData.appendChild(totalPrec);
-        horsensLastDayData.appendChild(windSpeed);
+        clearChildNodes(nodeToUpdate);
+        nodeToUpdate.appendChild(maxTemp);
+        nodeToUpdate.appendChild(minTemp);
+        nodeToUpdate.appendChild(totalPrec);
+        nodeToUpdate.appendChild(windSpeed);
     };
 
     const updateLatestTemperature = (city, data) => {
@@ -273,7 +277,7 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation("horsens", data);
         updateLatestWind("horsens", data);
         updateLatestCloud("horsens", data);
-        updateLastDayData(data);
+        updateLastDayData("horsens", data);
     });
 
     viewModel.aarhusWeatherData.bind((data) => {
@@ -282,6 +286,7 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation("aarhus", data);
         updateLatestWind("aarhus", data);
         updateLatestCloud("aarhus", data);
+        updateLastDayData("aarhus", data);
     });
 
     viewModel.copenhagenWeatherData.bind((data) => {
@@ -290,6 +295,7 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation("copenhagen", data);
         updateLatestWind("copenhagen", data);
         updateLatestCloud("copenhagen", data);
+        updateLastDayData("copenhagen", data);
     });
 
     viewModel.horsensForecast.bind((data) => {
