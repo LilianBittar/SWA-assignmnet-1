@@ -14,7 +14,13 @@ export const initView = (viewModel) => {
         precipitation: {},
     };
 
-    const lastDayElements = {};
+    const citySelect = document.querySelector("#citySelector");
+    const lastDaySummary = {
+        minTempElement: document.querySelector("#minTemp"),
+        maxTempElement: document.querySelector("#maxTemp"),
+        totalPrecElement: document.querySelector("#totalPrecipitation"),
+        avgWindElement: document.querySelector("#avgWindSpeed"),
+    };
 
     const updateLocators = () => {
         const cities = ["horsens", "aarhus", "copenhagen"];
@@ -43,84 +49,6 @@ export const initView = (viewModel) => {
         while (node.hasChildNodes()) {
             node.removeChild(node.firstChild);
         }
-    };
-
-    const updateLastDayData = (city, data) => {
-        const maxTemp = document.createElement("td");
-        const minTemp = document.createElement("td");
-        const totalPrec = document.createElement("td");
-        const windSpeed = document.createElement("td");
-
-        updateLocators();
-        const nodeToUpdate = lastDayElements[city];
-
-        const temps = data.temperatures.map((t) => {
-            return {
-                temperature: t.getValue(),
-                unit: t.getUnit(),
-                time: new Date(t.getTime()),
-            };
-        });
-        const pres = data.precipitations.map((p) => {
-            return {
-                precipiation: p.getValue(),
-                unit: p.getUnit(),
-                time: new Date(p.getTime()),
-                type: p.getPrecipitationType(),
-            };
-        });
-        const winds = data.wind.map((w) => {
-            return {
-                wind: w.getValue(),
-                unit: w.getUnit(),
-                time: new Date(w.getTime()),
-                direction: w.getDirection(),
-            };
-        });
-
-        const today = new Date();
-        const lastDayStart = new Date(today);
-        lastDayStart.setDate(today.getDay() - 1);
-        const lastDayEnd = new Date(today);
-
-        //temp
-        const lastDayTemp = temps.filter((t) => {
-            return t.time >= lastDayStart && t.time <= lastDayEnd;
-        });
-        const lastDayTempSort = lastDayTemp.sort(
-            (a, b) => a.temperature - b.temperature
-        );
-
-        maxTemp.textContent = `${
-            lastDayTempSort[lastDayTemp.length - 1].temperature
-        } ${lastDayTempSort[lastDayTemp.length - 1].unit}`;
-        minTemp.textContent = `${lastDayTemp[0].temperature} ${lastDayTemp[0].unit}`;
-
-        //pres
-        const lastDayPres = pres.filter((p) => {
-            return p.time >= lastDayStart && p.time <= lastDayEnd;
-        });
-        const lastDayPresSum = lastDayPres.reduce((total, value) => {
-            return Number(total) + Number(value.precipiation);
-        }, 0);
-        const avgPres = lastDayPresSum / lastDayPres.length;
-        totalPrec.textContent = `${avgPres.toFixed(2)} ${lastDayPres[0].unit}`;
-
-        //wind
-        const lastDayWind = winds.filter((w) => {
-            return w.time >= lastDayStart && w.time <= lastDayEnd;
-        });
-        const lastDayWindSum = lastDayWind.reduce((total, value) => {
-            return Number(total) + Number(value.wind);
-        }, 0);
-        const avgWind = lastDayWindSum / lastDayWind.length;
-        windSpeed.textContent = `${avgWind.toFixed(2)} ${lastDayWind[0].unit}`;
-
-        clearChildNodes(nodeToUpdate);
-        nodeToUpdate.appendChild(maxTemp);
-        nodeToUpdate.appendChild(minTemp);
-        nodeToUpdate.appendChild(totalPrec);
-        nodeToUpdate.appendChild(windSpeed);
     };
 
     const updateLatestTemperature = (city, data) => {

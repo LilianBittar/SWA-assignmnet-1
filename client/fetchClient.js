@@ -7,50 +7,12 @@ import {
     weatherPrediction,
 } from "./model";
 
+export async function apiClient(baseUrl) {
+    baseUrl = baseUrl ?? "http://localhost:8080";
 
-// function fetchWeatherData() {
-//     fetch(`http://localhost:8080/forecast/${citySelector.value}`)
-//     .then(response => response.json())
-//     .then(data => {
-//         displayHourlyForecast(data, selectedHour? selectedHour : new Date().getHours());  
-//     })
-//     .catch(error => console.error('Error fetching forecast data:', error));
-// }
-
-// function displayHourlyForecast(data, selectedHour) {
-//     const selectedHourData = data.filter(entry => {
-//         const entryTime = new Date(entry.time);
-//         return entryTime.getHours() - 2 === selectedHour;
-//     });
-
-//     const jsonString = JSON.stringify(selectedHourData, undefined, 4); 
-//     hourlyForecastDiv.textContent = jsonString;
-// }
-
-// hourSelector.addEventListener('change', () => {
-//     selectedHour = parseInt(hourSelector.value);
-//     fetchWeatherData();
-// });
-
-// citySelector.addEventListener('change', () => {
-//     citySelector.value;
-//     fetchWeatherData();
-// });
-
-// weatherDataButton.addEventListener('click', () => {
-//     window.location.href = 'weather_data.html';
-// });
-
-// weatherFormButton.addEventListener('click', () => {
-//     window.location.href = 'weather_form.html';
-//     });
-    
-// fetchWeatherData();
-
-export async function apiClient() {
     const data = {
         get: async function () {
-            const res = await fetch("http://localhost:8080/data");
+            const res = await fetch(`${baseUrl}/data`);
             const data = await res.json();
             return data.map((d) =>
                 weatherData(d.value, d.type, d.unit, event(d.time, d.place))
@@ -59,9 +21,7 @@ export async function apiClient() {
         place: async function (place) {
             return {
                 get: async function () {
-                    const res = await fetch(
-                        `http://localhost:8080/data/${place}`
-                    );
+                    const res = await fetch(`${baseUrl}/${place}`);
                     const data = await res.json();
                     return data.map((d) =>
                         weatherData(
@@ -78,7 +38,7 @@ export async function apiClient() {
 
     const forecast = {
         get: async function () {
-            const res = await fetch("http://localhost:8080/forecast");
+            const res = await fetch(`${baseUrl}/forecast`);
             const data = await res.json();
             return {
                 temperatures: data
@@ -152,7 +112,7 @@ export async function apiClient() {
 
     const forecastPlace = {
         get: async function (place) {
-            const res = await fetch(`http://localhost:8080/data/${place}`);
+            const res = await fetch(`${baseUrl}/data/${place}`);
             const data = await res.json();
             return {
                 temperatures: data
@@ -224,4 +184,3 @@ export async function apiClient() {
         },
     };
 }
-
