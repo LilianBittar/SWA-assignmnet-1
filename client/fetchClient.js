@@ -2,75 +2,148 @@
 import {
     weatherData,
     event,
+    weatherPrediction,
     temperaturePrediction,
     precipitationPrediction,
-    weatherPrediction,
+    windPrediction,
+    precipitation,
+    wind,
+    cloudCoverge,
+    cloudCoveragePrediction,
+    temperature,
 } from "./model";
 
-
-// function fetchWeatherData() {
-//     fetch(`http://localhost:8080/forecast/${citySelector.value}`)
-//     .then(response => response.json())
-//     .then(data => {
-//         displayHourlyForecast(data, selectedHour? selectedHour : new Date().getHours());  
-//     })
-//     .catch(error => console.error('Error fetching forecast data:', error));
-// }
-
-// function displayHourlyForecast(data, selectedHour) {
-//     const selectedHourData = data.filter(entry => {
-//         const entryTime = new Date(entry.time);
-//         return entryTime.getHours() - 2 === selectedHour;
-//     });
-
-//     const jsonString = JSON.stringify(selectedHourData, undefined, 4); 
-//     hourlyForecastDiv.textContent = jsonString;
-// }
-
-// hourSelector.addEventListener('change', () => {
-//     selectedHour = parseInt(hourSelector.value);
-//     fetchWeatherData();
-// });
-
-// citySelector.addEventListener('change', () => {
-//     citySelector.value;
-//     fetchWeatherData();
-// });
-
-// weatherDataButton.addEventListener('click', () => {
-//     window.location.href = 'weather_data.html';
-// });
-
-// weatherFormButton.addEventListener('click', () => {
-//     window.location.href = 'weather_form.html';
-//     });
-    
-// fetchWeatherData();
-
-export async function apiClient() {
-    const data = {
-        get: async function () {
-            const res = await fetch("http://localhost:8080/data");
-            const data = await res.json();
-            return data.map((d) =>
-                weatherData(d.value, d.type, d.unit, event(d.time, d.place))
-            );
-        },
-        place: async function (place) {
-            return {
-                get: async function () {
-                    const res = await fetch(
-                        `http://localhost:8080/data/${place}`
-                    );
-                    const data = await res.json();
-                    return data.map((d) =>
+export function apiClient(baseUrl) {
+    baseUrl = baseUrl ?? "http://localhost:8080";
+    const _mapPredicitons = (data) => {
+        return {
+            temperatures: data
+                .filter((d) => d.type === "temperature")
+                .map((d) =>
+                    temperaturePrediction(
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            precipitations: data
+                .filter((d) => d.type === "precipitation")
+                .map((d) =>
+                    precipitationPrediction(
+                        d.precipitation_types,
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            wind: data
+                .filter((d) => d.type === "wind speed")
+                .map((d) =>
+                    windPrediction(
+                        d.directions,
+                        weatherPrediction(
+                            d.to,
+                            d.from,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            cloudCoverages: data
+                .filter((d) => d.type === "cloud coverage")
+                .map((d) =>
+                    cloudCoveragePrediction(
+                        d.to,
+                        d.from,
+                        d.type,
+                        d.unit,
+                        event(d.time, d.place)
+                    )
+                ),
+        };
+    };
+    const _mapWeatherData = (data) => {
+        return {
+            temperatures: data
+                .filter((d) => d.type === "temperature")
+                .map((d) =>
+                    temperature(
                         weatherData(
                             d.value,
                             d.type,
                             d.unit,
                             event(d.time, d.place)
                         )
-                    );
+                    )
+                ),
+            precipitations: data
+                .filter((d) => d.type === "precipitation")
+                .map((d) =>
+                    precipitation(
+                        d.precipitation_type,
+                        weatherData(
+                            d.value,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            wind: data
+                .filter((d) => d.type === "wind speed")
+                .map((d) =>
+                    wind(
+                        d.direction,
+                        weatherData(
+                            d.value,
+                            d.type,
+                            d.unit,
+                            event(d.time, d.place)
+                        )
+                    )
+                ),
+            cloudCoverages: data
+                .filter((d) => d.type === "cloud coverage")
+                .map((d) =>
+                    cloudCoverge(
+                        d.value,
+                        d.type,
+                        d.unit,
+                        event(d.time, d.place)
+                    )
+                ),
+        };
+    };
+    const data = {
+        get: async function () {
+            const res = await fetch(`${baseUrl}/data`);
+            const data = await res.json();
+            return _mapWeatherData(data);
+        },
+        post: async function (data) {
+            const res = await fetch(`${baseUrl}/data`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: data,
+            });
+
+            return await res.json();
+        },
+        place: function (place) {
+            return {
+                get: async function () {
+                    const res = await fetch(`${baseUrl}/data/${place}`);
+                    const data = await res.json();
+                    return _mapWeatherData(data);
                 },
             };
         },
@@ -78,150 +151,22 @@ export async function apiClient() {
 
     const forecast = {
         get: async function () {
-            const res = await fetch("http://localhost:8080/forecast");
+            const res = await fetch(`${baseUrl}/forecast`);
             const data = await res.json();
-            return {
-                temperatures: data
-                    .filter((d) => d.type === "temperature")
-                    .map((d) =>
-                        temperaturePrediction(
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                precipitations: data
-                    .filter((d) => d.type === "precipitation")
-                    .map((d) =>
-                        precipitationPrediction(
-                            d.precipitation_types,
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                wind: data
-                    .filter((d) => d.type === "wind")
-                    .map((d) =>
-                        wind(
-                            d.directions,
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                temperaturePredictions: data
-                    .filter((d) => d.type === "temperature")
-                    .map((d) =>
-                        temperaturePrediction(
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                cloudCoverages: data
-                    .filter((d) => d.type === "cloud coverage")
-                    .map((d) =>
-                        cloudCoveragePrediction(
-                            d.to,
-                            d.from,
-                            d.type,
-                            d.unit,
-                            event(d.time, d.place)
-                        )
-                    ),
-            };
+            return _mapPredicitons(data);
         },
     };
 
     const forecastPlace = {
         get: async function (place) {
-            const res = await fetch(`http://localhost:8080/data/${place}`);
+            const res = await fetch(`${baseUrl}/forecast/${place}`);
             const data = await res.json();
-            return {
-                temperatures: data
-                    .filter((d) => d.type === "temperature")
-                    .map((d) =>
-                        temperaturePrediction(
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                precipitations: data
-                    .filter((d) => d.type === "precipitation")
-                    .map((d) =>
-                        precipitationPrediction(
-                            d.precipitation_types,
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                wind: data
-                    .filter((d) => d.type === "wind")
-                    .map((d) =>
-                        wind(
-                            d.directions,
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                temperaturePredictions: data
-                    .filter((d) => d.type === "temperature")
-                    .map((d) =>
-                        temperaturePrediction(
-                            weatherPrediction(
-                                d.to,
-                                d.from,
-                                d.type,
-                                d.unit,
-                                event(d.time, d.place)
-                            )
-                        )
-                    ),
-                cloudCoverages: data
-                    .filter((d) => d.type === "cloud coverage")
-                    .map((d) =>
-                        cloudCoveragePrediction(
-                            d.to,
-                            d.from,
-                            d.type,
-                            d.unit,
-                            event(d.time, d.place)
-                        )
-                    ),
-            };
+            return _mapPredicitons(data);
         },
     };
+    return {
+        forecast,
+        forecastPlace,
+        data,
+    };
 }
-

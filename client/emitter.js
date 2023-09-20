@@ -22,12 +22,12 @@ export function createEmitter() {
         );
     };
 
-    const emit = (subject, data) => {
+    const emit = (subject, data, prev = undefined) => {
         if (!(subject in listeners)) {
             return;
         }
 
-        listeners[subject].forEach((listener) => listener(data));
+        listeners[subject].forEach((listener) => listener(data, prev));
     };
 
     return {

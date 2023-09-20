@@ -6,15 +6,24 @@ export function createBindableStringProperty(initialValue) {
     let _subject = "PROPERTY_UPDATED";
 
     const setProperty = (val) => {
+        const tempPrev = _val;
         _val = val;
-        _emitter.emit(_subject, _val);
+        _emitter.emit(_subject, val, tempPrev);
     };
 
     /**
-     * @param onUpdate {(string) => void}
+     * @param onUpdate {(string, prev?) => void}
      */
     const bind = (onUpdate) => {
         _emitter.on(_subject, onUpdate);
+    };
+
+    /**
+     *
+     * @param {(object) => void} listener
+     */
+    const unbind = (listener) => {
+        _emitter.detach(_subject, listener);
     };
 
     const read = () => _val;
@@ -23,6 +32,7 @@ export function createBindableStringProperty(initialValue) {
         setProperty,
         bind,
         read,
+        unbind,
     };
 }
 export function createBindableObjectProperty(initialValue) {
@@ -31,15 +41,24 @@ export function createBindableObjectProperty(initialValue) {
     let _subject = "PROPERTY_UPDATED";
 
     const setProperty = (val) => {
+        const tempPrev = _val ? { ..._val } : {};
         _val = val;
-        _emitter.emit(_subject, _val);
+        _emitter.emit(_subject, val, tempPrev);
     };
 
     /**
-     * @param onUpdate {(object) => void}
+     * @param onUpdate {(object,prev?) => void}
      */
     const bind = (onUpdate) => {
         _emitter.on(_subject, onUpdate);
+    };
+
+    /**
+     *
+     * @param {(object) => void} listener
+     */
+    const unbind = (listener) => {
+        _emitter.detach(_subject, listener);
     };
 
     const read = () => _val;
@@ -48,5 +67,6 @@ export function createBindableObjectProperty(initialValue) {
         setProperty,
         bind,
         read,
+        unbind,
     };
 }
