@@ -5,7 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: "./client/index.js",
-    mode: "production",
+    mode: "development",
     output: {
         filename: "static/client.js",
         path: path.resolve(__dirname, "dist"),

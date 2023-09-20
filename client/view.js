@@ -14,7 +14,11 @@ export const initView = (viewModel) => {
         precipitation: {},
     };
 
+    /**
+     * @type {HTMLSelectElement}
+     */
     const citySelect = document.querySelector("#citySelector");
+
     const lastDaySummary = {
         minTempElement: document.querySelector("#minTemp"),
         maxTempElement: document.querySelector("#maxTemp"),
@@ -163,6 +167,29 @@ export const initView = (viewModel) => {
         nodeToUpdate.appendChild(timeTd);
     };
 
+    const bindToLastDaySummary = (city) => {
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["maxTemperature"].bind(
+                (data) => (lastDaySummary.maxTempElement.textContent = data)
+            );
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["minTemperature"].bind(
+                (data) => (lastDaySummary.minTempElement.textContent = data)
+            );
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["avgWind"].bind(
+                (data) => (lastDaySummary.avgWindElement.textContent = data)
+            );
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["totalPrecipitation"].bind(
+                (data) => (lastDaySummary.totalPrecElement.textContent = data)
+            );
+    };
+
     const updateForecasts = (city, data) => {
         updateLocators();
         forecastElements["temperature"][city].innerHTML = data.temperatures.map(
@@ -205,7 +232,6 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation("horsens", data);
         updateLatestWind("horsens", data);
         updateLatestCloud("horsens", data);
-        updateLastDayData("horsens", data);
     });
 
     viewModel.aarhusWeatherData.bind((data) => {
@@ -214,7 +240,6 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation("aarhus", data);
         updateLatestWind("aarhus", data);
         updateLatestCloud("aarhus", data);
-        updateLastDayData("aarhus", data);
     });
 
     viewModel.copenhagenWeatherData.bind((data) => {
@@ -223,7 +248,6 @@ export const initView = (viewModel) => {
         updateLatestPrecipitation("copenhagen", data);
         updateLatestWind("copenhagen", data);
         updateLatestCloud("copenhagen", data);
-        updateLastDayData("copenhagen", data);
     });
 
     viewModel.horsensForecast.bind((data) => {
@@ -239,5 +263,9 @@ export const initView = (viewModel) => {
     viewModel.copenhagenForecast.bind((data) => {
         updateLocators();
         updateForecasts("copenhagen", data);
+    });
+
+    citySelect.addEventListener("change", (e) => {
+        viewModel.currentCity.setProperty(e.currentTarget.value);
     });
 };

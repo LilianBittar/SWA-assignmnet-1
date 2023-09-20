@@ -33,6 +33,8 @@ export function createViewModel(model) {
         },
     };
 
+    let currentCity = createBindableStringProperty();
+
     model.subscribeToWeatherData("Horsens", (data) =>
         horsensWeatherData.setProperty(data)
     );
@@ -134,6 +136,7 @@ export function createViewModel(model) {
         horsensForecast,
         aarhusForecast,
         copenhagenForecast,
+        currentCity,
         getLastDaySummaryProperty,
     };
 }

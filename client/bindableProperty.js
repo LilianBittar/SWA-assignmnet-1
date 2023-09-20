@@ -17,12 +17,21 @@ export function createBindableStringProperty(initialValue) {
         _emitter.on(_subject, onUpdate);
     };
 
+    /**
+     *
+     * @param {(object) => void} listener
+     */
+    const unbind = (listener) => {
+        _emitter.detach(_subject, listener);
+    };
+
     const read = () => _val;
 
     return {
         setProperty,
         bind,
         read,
+        unbind,
     };
 }
 export function createBindableObjectProperty(initialValue) {
@@ -42,11 +51,20 @@ export function createBindableObjectProperty(initialValue) {
         _emitter.on(_subject, onUpdate);
     };
 
+    /**
+     *
+     * @param {(object) => void} listener
+     */
+    const unbind = (listener) => {
+        _emitter.detach(_subject, listener);
+    };
+
     const read = () => _val;
 
     return {
         setProperty,
         bind,
         read,
+        unbind,
     };
 }
