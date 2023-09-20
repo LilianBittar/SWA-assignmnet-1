@@ -1,45 +1,32 @@
 // Horsens
 export const initView = (viewModel) => {
-    const forecastElements = {
-        temperature: {},
-        wind: {},
-        cloud: {},
-        precipitation: {},
-    };
-
-    const latestDataElements = {
-        temperature: {},
-        wind: {},
-        cloud: {},
-        precipitation: {},
-    };
-
     /**
      * @type {HTMLSelectElement}
      */
     const citySelect = document.querySelector("#citySelector");
+    /**
+     * @type {HTMLButtonElement}
+     */
+    const generateDataBtn = document.querySelector("#generate-data-btn");
+    const sendDataBtn = document.querySelector("#send-data-btn");
+    const newWeatherDataPreview = document.querySelector("#post-data-preview");
+
+    generateDataBtn.onclick = () => {
+        viewModel.generateNewWeatherData();
+    };
+    sendDataBtn.addEventListener("click", () => {
+        viewModel.sendWeatherData();
+    });
+
+    viewModel.newWeatherDataProperty.bind((data) => {
+        newWeatherDataPreview.textContent = data;
+    });
 
     const lastDaySummary = {
         minTempElement: document.querySelector("#minTemp"),
         maxTempElement: document.querySelector("#maxTemp"),
         totalPrecElement: document.querySelector("#totalPrecipitation"),
         avgWindElement: document.querySelector("#avgWindSpeed"),
-    };
-
-    const updateLocators = () => {
-        const cities = ["horsens", "aarhus", "copenhagen"];
-        const dataTypes = ["temperature", "precipitation", "wind", "cloud"];
-        cities.forEach((c) => {
-            lastDayElements[c] = document.querySelector(`#${c}-last-day-data`);
-            dataTypes.forEach((t) => {
-                forecastElements[t][c] = document.querySelector(
-                    `#${c}-${t}-forecast`
-                );
-                latestDataElements[t][c] = document.querySelector(
-                    `#${c}-latest-${t}-data`
-                );
-            });
-        });
     };
 
     const getHour = (data) => {
@@ -55,11 +42,10 @@ export const initView = (viewModel) => {
         }
     };
 
-    const updateLatestTemperature = (city, data) => {
+    const updateLatestTemperature = (data, _) => {
         const tempTd = document.createElement("td");
         const timeTd = document.createElement("td");
-        updateLocators();
-        const nodeToUpdate = latestDataElements["temperature"][city];
+        const nodeToUpdate = document.querySelector("#last-day-data");
 
         const temps = data.temperatures
             .map((t) => {
@@ -81,12 +67,11 @@ export const initView = (viewModel) => {
         nodeToUpdate.appendChild(timeTd);
     };
 
-    const updateLatestPrecipitation = (city, data) => {
+    const updateLatestPrecipitation = (data, _) => {
         const preTd = document.createElement("td");
         const timeTd = document.createElement("td");
         const preTypeTd = document.createElement("td");
-        updateLocators();
-        const nodeToUpdate = latestDataElements["precipitation"][city];
+        const nodeToUpdate = document.querySelector("#last-day-data");
 
         const pres = data.precipitations
             .map((p) => {
@@ -111,12 +96,11 @@ export const initView = (viewModel) => {
         nodeToUpdate.append(preTypeTd);
     };
 
-    const updateLatestWind = (city, data) => {
+    const updateLatestWind = (data, _) => {
         const windTd = document.createElement("td");
         const timeTd = document.createElement("td");
         const dirTd = document.createElement("td");
-        updateLocators();
-        const nodeToUpdate = latestDataElements["wind"][city];
+        const nodeToUpdate = document.querySelector("#last-day-data");
 
         const wind = data.wind
             .map((w) => {
@@ -141,11 +125,10 @@ export const initView = (viewModel) => {
         nodeToUpdate.append(dirTd);
     };
 
-    const updateLatestCloud = (city, data) => {
+    const updateLatestCloud = (data, _) => {
         const cloudTd = document.createElement("td");
         const timeTd = document.createElement("td");
-        updateLocators();
-        const nodeToUpdate = latestDataElements["cloud"][city];
+        const nodeToUpdate = document.querySelector("#last-day-data");
 
         const cloud = data.cloudCoverages
             .map((c) => {
@@ -167,49 +150,40 @@ export const initView = (viewModel) => {
         nodeToUpdate.appendChild(timeTd);
     };
 
-    const bindToLastDaySummary = (city) => {
-        viewModel
-            .getLastDaySummaryProperty(city)
-            ["maxTemperature"].bind(
-                (data) => (lastDaySummary.maxTempElement.textContent = data)
-            );
-        viewModel
-            .getLastDaySummaryProperty(city)
-            ["minTemperature"].bind(
-                (data) => (lastDaySummary.minTempElement.textContent = data)
-            );
-        viewModel
-            .getLastDaySummaryProperty(city)
-            ["avgWind"].bind(
-                (data) => (lastDaySummary.avgWindElement.textContent = data)
-            );
-        viewModel
-            .getLastDaySummaryProperty(city)
-            ["totalPrecipitation"].bind(
-                (data) => (lastDaySummary.totalPrecElement.textContent = data)
-            );
+    const updateMaxTemp = (data, _) => {
+        lastDaySummary.maxTempElement.textContent = data;
+    };
+    const updateMinTemp = (data, _) => {
+        lastDaySummary.minTempElement.textContent = data;
+    };
+    const updateAvgWind = (data, _) => {
+        lastDaySummary.avgWindElement.textContent = data;
+    };
+    const updateTotalPrecipitation = (data, _) => {
+        lastDaySummary.totalPrecElement.textContent = data;
     };
 
-    const updateForecasts = (city, data) => {
-        updateLocators();
-        forecastElements["temperature"][city].innerHTML = data.temperatures.map(
+    const updateForecasts = (data) => {
+        const getSelector = (type) => `#${type}-forecast`;
+        const getElement = (type) => document.querySelector(getSelector(type));
+
+        getElement("temperature").innerHTML = data.temperatures.map(
             (d) =>
                 `Hour: ${getHour(
                     d
                 )}. Temperature: ${d.getMin()} - ${d.getMax()} ${d.getUnit()} <br>`
         );
 
-        forecastElements["precipitation"][city].innerHTML =
-            data.precipitations.map(
-                (d) =>
-                    `Hour: ${getHour(
-                        d
-                    )}. Precipitation: ${d.getMin()} - ${d.getMax()} ${d.getUnit()}. Precipitation Types: ${d
-                        .getExpectedTypes()
-                        .join(",")} <br>`
-            );
+        getElement("precipitation").innerHTML = data.precipitations.map(
+            (d) =>
+                `Hour: ${getHour(
+                    d
+                )}. Precipitation: ${d.getMin()} - ${d.getMax()} ${d.getUnit()}. Precipitation Types: ${d
+                    .getExpectedTypes()
+                    .join(",")} <br>`
+        );
 
-        forecastElements["wind"][city].innerHTML = data.wind.map(
+        getElement("wind").innerHTML = data.wind.map(
             (d) =>
                 `Hour: ${getHour(
                     d
@@ -218,7 +192,7 @@ export const initView = (viewModel) => {
                     .join(",")} <br>`
         );
 
-        forecastElements["cloud"][city].innerHTML = data.cloudCoverages.map(
+        getElement("cloud").innerHTML = data.cloudCoverages.map(
             (d) =>
                 `Hour: ${getHour(
                     d
@@ -226,46 +200,111 @@ export const initView = (viewModel) => {
         );
     };
 
-    viewModel.horsensWeatherData.bind((data) => {
-        updateLocators();
-        updateLatestTemperature("horsens", data);
-        updateLatestPrecipitation("horsens", data);
-        updateLatestWind("horsens", data);
-        updateLatestCloud("horsens", data);
-    });
+    const bindToLastDaySummary = (city, _) => {
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["maxTemperature"].bind(updateMaxTemp);
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["minTemperature"].bind(updateMinTemp);
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["avgWind"].bind(updateAvgWind);
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["totalPrecipitation"].bind(updateTotalPrecipitation);
+    };
 
-    viewModel.aarhusWeatherData.bind((data) => {
-        updateLocators();
-        updateLatestTemperature("aarhus", data);
-        updateLatestPrecipitation("aarhus", data);
-        updateLatestWind("aarhus", data);
-        updateLatestCloud("aarhus", data);
-    });
+    const unbindToLastDaySummary = (city, _) => {
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["maxTemperature"].unbind(updateMaxTemp);
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["minTemperature"].unbind(updateMinTemp);
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["avgWind"].unbind(updateAvgWind);
+        viewModel
+            .getLastDaySummaryProperty(city)
+            ["totalPrecipitation"].unbind(updateTotalPrecipitation);
+    };
 
-    viewModel.copenhagenWeatherData.bind((data) => {
-        updateLocators();
-        updateLatestTemperature("copenhagen", data);
-        updateLatestPrecipitation("copenhagen", data);
-        updateLatestWind("copenhagen", data);
-        updateLatestCloud("copenhagen", data);
-    });
+    const bindToWeatherData = (city) => {
+        if (city === "horsens") {
+            viewModel.horsensWeatherData.bind(updateLatestTemperature);
+            viewModel.horsensWeatherData.bind(updateLatestCloud);
+            viewModel.horsensWeatherData.bind(updateLatestPrecipitation);
+            viewModel.horsensWeatherData.bind(updateLatestWind);
+        } else if (city === "aarhus") {
+            viewModel.aarhusWeatherData.bind(updateLatestTemperature);
+            viewModel.aarhusWeatherData.bind(updateLatestCloud);
+            viewModel.aarhusWeatherData.bind(updateLatestPrecipitation);
+            viewModel.aarhusWeatherData.bind(updateLatestWind);
+        } else if (city === "copenhagen") {
+            viewModel.copenhagenWeatherData.bind(updateLatestCloud);
+            viewModel.copenhagenWeatherData.bind(updateLatestPrecipitation);
+            viewModel.copenhagenWeatherData.bind(updateLatestTemperature);
+            viewModel.copenhagenWeatherData.bind(updateLatestWind);
+        }
+    };
 
-    viewModel.horsensForecast.bind((data) => {
-        updateLocators();
-        updateForecasts("horsens", data);
-    });
+    const unbindToWeatherData = (city) => {
+        if (city === "horsens") {
+            viewModel.horsensWeatherData.unbind(updateLatestCloud);
+            viewModel.horsensWeatherData.unbind(updateLatestPrecipitation);
+            viewModel.horsensWeatherData.unbind(updateLatestTemperature);
+            viewModel.horsensWeatherData.unbind(updateLatestWind);
+        } else if (city === "aarhus") {
+            viewModel.aarhusWeatherData.unbind(updateLatestCloud);
+            viewModel.aarhusWeatherData.unbind(updateLatestPrecipitation);
+            viewModel.aarhusWeatherData.unbind(updateLatestTemperature);
+            viewModel.aarhusWeatherData.unbind(updateLatestWind);
+        } else if (city === "copenhagen") {
+            viewModel.copenhagenWeatherData.unbind(updateLatestCloud);
+            viewModel.copenhagenWeatherData.unbind(updateLatestPrecipitation);
+            viewModel.copenhagenWeatherData.unbind(updateLatestTemperature);
+            viewModel.copenhagenWeatherData.unbind(updateLatestWind);
+        }
+    };
 
-    viewModel.aarhusForecast.bind((data) => {
-        updateLocators();
-        updateForecasts("aarhus", data);
-    });
+    const unbindToForecast = (city) => {
+        if (city === "horsens") {
+            viewModel.horsensForecast.unbind(updateForecasts);
+        } else if (city === "aarhus") {
+            viewModel.aarhusForecast.unbind(updateForecasts);
+        } else if (city === "copenhagen") {
+            viewModel.copenhagenForecast.unbind(updateForecasts);
+        }
+    };
 
-    viewModel.copenhagenForecast.bind((data) => {
-        updateLocators();
-        updateForecasts("copenhagen", data);
-    });
+    const bindToForecast = (city) => {
+        if (city === "horsens") {
+            viewModel.horsensForecast.bind(updateForecasts);
+        } else if (city === "aarhus") {
+            viewModel.aarhusForecast.bind(updateForecasts);
+        } else if (city === "copenhagen") {
+            viewModel.copenhagenForecast.bind(updateForecasts);
+        }
+    };
 
     citySelect.addEventListener("change", (e) => {
         viewModel.currentCity.setProperty(e.currentTarget.value);
     });
+
+    viewModel.currentCity.bind((curr, prev) => {
+        const lastCity = prev.toLowerCase();
+        const newCity = curr.toLowerCase();
+
+        unbindToLastDaySummary(lastCity);
+        bindToLastDaySummary(newCity);
+
+        unbindToWeatherData(lastCity);
+        bindToWeatherData(newCity);
+
+        unbindToForecast(lastCity);
+        bindToForecast(newCity);
+    });
+
+    viewModel.currentCity.setProperty(citySelect.value);
 };

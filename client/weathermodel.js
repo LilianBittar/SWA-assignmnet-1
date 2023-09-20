@@ -21,84 +21,105 @@ export function createWeatherModel(client) {
     const _fetchClient = apiClient();
 
     const getWeatherData = () => {
-        _client.data
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["All"], d));
-        _client.data
-            .place("Aarhus")
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["Aarhus"], d));
-        _client.data
-            .place("Copenhagen")
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["Copenhagen"], d));
-        _client.data
-            .place("Horsens")
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["Horsens"], d));
+        if (client === "xhr") {
+            _client.data
+                .get()
+                .then((d) => _emitter.emit(_weatherDataSubjects["All"], d));
+            _client.data
+                .place("Aarhus")
+                .get()
+                .then((d) => _emitter.emit(_weatherDataSubjects["Aarhus"], d));
+            _client.data
+                .place("Copenhagen")
+                .get()
+                .then((d) =>
+                    _emitter.emit(_weatherDataSubjects["Copenhagen"], d)
+                );
+            _client.data
+                .place("Horsens")
+                .get()
+                .then((d) => _emitter.emit(_weatherDataSubjects["Horsens"], d));
+        }
+        if (client === "fetch") {
+            _fetchClient.data
+                .get()
+                .then((d) => _emitter.emit(_weatherDataSubjects["All"], d));
+            _fetchClient.data
+                .place("Aarhus")
+                .get()
+                .then((d) => _emitter.emit(_weatherDataSubjects["Aarhus"], d));
+            _fetchClient.data
+                .place("Copenhagen")
+                .get()
+                .then((d) =>
+                    _emitter.emit(_weatherDataSubjects["Copenhagen"], d)
+                );
+            _fetchClient.data
+                .place("Horsens")
+                .get()
+                .then((d) => _emitter.emit(_weatherDataSubjects["Horsens"], d));
+        }
     };
 
-    const getWeatherDataByFetch = () => {
-        _fetchClient.data
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["All"], d));
-        _fetchClient.data
-            .place("Aarhus")
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["Aarhus"], d));
-        _fetchClient.data
-            .place("Copenhagen")
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["Copenhagen"], d));
-        _fetchClient.data
-            .place("Horsens")
-            .get()
-            .then((d) => _emitter.emit(_weatherDataSubjects["Horsens"], d));
-    };
+    const getWeatherDataByFetch = () => {};
 
     getWeatherData();
-    const ONE_MINUTE = 60_000;
+    // const ONE_MINUTE = 60_000;
     setInterval(async () => {
-        _client.forecast
-            .get()
-            .then((d) => console.log(d))
-            .then((d) => _emitter.emit(_forecastUpdateSubjects["All"], d));
-        _client.forecast
-            .place("Aarhus")
-            .get()
-            .then((d) => _emitter.emit(_forecastUpdateSubjects["Aarhus"], d));
-        _client.forecast
-            .place("Copenhagen")
-            .get()
-            .then((d) =>
-                _emitter.emit(_forecastUpdateSubjects["Copenhagen"], d)
-            );
-        _client.forecast
-            .place("Horsens")
-            .get()
-            .then((d) => _emitter.emit(_forecastUpdateSubjects["Horsens"], d));
-            getWeatherData();
-        
-        _fetchClient.forecast
-            .get()
-            .then((d) => console.log(d))
-            .then((d) => _emitter.emit(_forecastUpdateSubjects["All"], d));
-        _fetchClient.forecast
-            .place("Aarhus")
-            .get()
-            .then((d) => _emitter.emit(_forecastUpdateSubjects["Aarhus"], d));
-        _fetchClient.forecast
-            .place("Copenhagen")
-            .get()
-            .then((d) =>
-                _emitter.emit(_forecastUpdateSubjects["Copenhagen"], d)
-            );
+        if (client === "xhr") {
+            _client.forecast
+                .get()
+                .then((d) => _emitter.emit(_forecastUpdateSubjects["All"], d));
+            _client.forecast
+                .place("Aarhus")
+                .get()
+                .then((d) =>
+                    _emitter.emit(_forecastUpdateSubjects["Aarhus"], d)
+                );
+            _client.forecast
+                .place("Copenhagen")
+                .get()
+                .then((d) =>
+                    _emitter.emit(_forecastUpdateSubjects["Copenhagen"], d)
+                );
+            _client.forecast
+                .place("Horsens")
+                .get()
+                .then((d) =>
+                    _emitter.emit(_forecastUpdateSubjects["Horsens"], d)
+                );
+        }
+
+        if (client === "fetch") {
             _fetchClient.forecast
-            .place("Horsens")
-            .get()
-            .then((d) => _emitter.emit(_forecastUpdateSubjects["Horsens"], d));
-            getWeatherDataByFetch();
+                .get()
+                .then((d) => _emitter.emit(_forecastUpdateSubjects["All"], d));
+            _fetchClient.forecastPlace
+                .get("Aarhus")
+                .then((d) =>
+                    _emitter.emit(_forecastUpdateSubjects["Aarhus"], d)
+                );
+            _fetchClient.forecastPlace
+                .get("Copenhagen")
+                .then((d) =>
+                    _emitter.emit(_forecastUpdateSubjects["Copenhagen"], d)
+                );
+            _fetchClient.forecastPlace
+                .get("Horsens")
+                .then((d) =>
+                    _emitter.emit(_forecastUpdateSubjects["Horsens"], d)
+                );
+        }
+        getWeatherData();
     }, 1000);
+
+    const sendNewWeatherData = async (data) => {
+        if (client === "fetch") {
+            await _fetchClient.data.post(data);
+        } else if (client === "xhr") {
+            await _client.data.post(data);
+        }
+    };
 
     /***
      * Valid places: All | Horsens | Aarhus | Copenhagen
@@ -119,5 +140,6 @@ export function createWeatherModel(client) {
         subscribeToWeatherData,
         getWeatherData,
         getWeatherDataByFetch,
+        sendNewWeatherData,
     };
 }

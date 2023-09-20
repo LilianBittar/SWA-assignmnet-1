@@ -1,16 +1,67 @@
-<html>
-  <head>
-    <title>Send data to server</title>
-  </head>
-  
-  <body>
-    <div>
-      <h1>Static Page</h1>
-      <p>Weather details</p>
-      
-    </div>
-    <script src="model.js">
-      
-    </script>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <title>Weather Report (Fetch)</title>
+    </head>
+
+    <body>
+        <h1>Weather Report - Fetch</h1>
+
+        <a href="/index.html">Go to XHR page</a>
+
+        <h2>Select City</h2>
+        <select id="citySelector">
+            <option value="Horsens">Horsens</option>
+            <option value="Aarhus">Aarhus</option>
+            <option value="Copenhagen">Copenhagen</option>
+        </select>
+        <button onclick="xhrApiClient()">Load Data</button>
+
+        <h2>Hourly Forecast (Next 24 Hours)</h2>
+        <div id="hourlyForecast"></div>
+        <div class="data-container">
+            <div id="temperature-forecast"></div>
+            <div id="precipitation-forecast"></div>
+            <div id="wind-forecast"></div>
+            <div id="cloud-forecast"></div>
+        </div>
+
+        <h2>Latest Measurements</h2>
+        <div id="latestMeasurements"></div>
+        <table>
+            <thead>
+                <th>Last day's max temperature</th>
+                <th>Last day's min temperature</th>
+                <th>Last day's total precipitation</th>
+                <th>Last day's avg wind speed</th>
+            </thead>
+
+            <tbody id="summary">
+                <tr id="last-day-data">
+                    <td>10 C</td>
+                    <td>0 C</td>
+                    <td>10 mm</td>
+                    <td>20 m/s</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Summary (Last 24 Hours)</h2>
+        <ul>
+            <li>Minimum Temperature: <span id="minTemp"></span></li>
+            <li>Maximum Temperature: <span id="maxTemp"></span></li>
+            <li>Total Precipitation: <span id="totalPrecipitation"></span></li>
+            <li>Average Wind Speed: <span id="avgWindSpeed"></span></li>
+        </ul>
+
+        <h2>Send Weather Data</h2>
+        <div id="post-data-preview"></div>
+        <button id="generate-data-btn">Generate</button>
+        <button id="send-data-btn">Send</button>
+
+        <script src="/client2.js"></script>
+    </body>
 </html>

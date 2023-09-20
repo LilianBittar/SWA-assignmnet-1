@@ -3,6 +3,8 @@ import {
     createBindableStringProperty,
 } from "./bindableProperty";
 
+import { generateWeatherData } from "./dataGenerator";
+
 export function createViewModel(model) {
     let horsensWeatherData = createBindableObjectProperty();
     let aarhusWeatherData = createBindableObjectProperty();
@@ -11,6 +13,10 @@ export function createViewModel(model) {
     let horsensForecast = createBindableObjectProperty();
     let aarhusForecast = createBindableObjectProperty();
     let copenhagenForecast = createBindableObjectProperty();
+
+    let currentCity = createBindableStringProperty();
+
+    const newWeatherDataProperty = createBindableStringProperty();
 
     let lastDaySummary = {
         horsens: {
@@ -33,29 +39,8 @@ export function createViewModel(model) {
         },
     };
 
-    let currentCity = createBindableStringProperty();
-
-    model.subscribeToWeatherData("Horsens", (data) =>
-        horsensWeatherData.setProperty(data)
-    );
-    model.subscribeToWeatherData("Aarhus", (data) =>
-        aarhusWeatherData.setProperty(data)
-    );
-    model.subscribeToWeatherData("Copenhagen", (data) =>
-        copenhagenWeatherData.setProperty(data)
-    );
-
-    model.subscribeToForecastUpdates("Horsens", (data) => {
-        horsensForecast.setProperty(data);
-    });
-    model.subscribeToForecastUpdates("Aarhus", (data) => {
-        aarhusForecast.setProperty(data);
-    });
-    model.subscribeToForecastUpdates("Copenhagen", (data) => {
-        copenhagenForecast.setProperty(data);
-    });
-
     const updateLastDaySummary = (city, data) => {
+        console.log("View Model::LastDay", city, data);
         const temps = data.temperatures.map((t) => {
             return {
                 temperature: t.getValue(),
@@ -109,9 +94,9 @@ export function createViewModel(model) {
         const lastDayPresSum = lastDayPres.reduce((total, value) => {
             return Number(total) + Number(value.precipiation);
         }, 0);
-        const avgPres = lastDayPresSum / lastDayPres.length;
+        // const avgPres = lastDayPresSum / lastDayPres.length;
         lastDaySummary[city]["totalPrecipitation"].setProperty(
-            `${avgPres.toFixed(2)} ${lastDayPres[0].unit}`
+            `${lastDayPresSum.toFixed(2)} ${lastDayPres[0].unit}`
         );
 
         //wind
@@ -127,7 +112,41 @@ export function createViewModel(model) {
         );
     };
 
-    const getLastDaySummaryProperty = (city) => lastDaySummary[city];
+    model.subscribeToWeatherData("Horsens", (data) => {
+        horsensWeatherData.setProperty(data);
+        updateLastDaySummary("horsens", data);
+    });
+    model.subscribeToWeatherData("Aarhus", (data) => {
+        aarhusWeatherData.setProperty(data);
+        updateLastDaySummary("aarhus", data);
+    });
+    model.subscribeToWeatherData("Copenhagen", (data) => {
+        copenhagenWeatherData.setProperty(data);
+        updateLastDaySummary("copenhagen", data);
+    });
+
+    model.subscribeToForecastUpdates("Horsens", (data) => {
+        horsensForecast.setProperty(data);
+    });
+    model.subscribeToForecastUpdates("Aarhus", (data) => {
+        aarhusForecast.setProperty(data);
+    });
+    model.subscribeToForecastUpdates("Copenhagen", (data) => {
+        copenhagenForecast.setProperty(data);
+    });
+
+    const getLastDaySummaryProperty = (city) => {
+        return lastDaySummary[city];
+    };
+
+    const sendWeatherData = () => {
+        model.sendNewWeatherData(newWeatherDataProperty.read());
+    };
+
+    const generateNewWeatherData = () => {
+        const data = generateWeatherData();
+        newWeatherDataProperty.setProperty(JSON.stringify(data));
+    };
 
     return {
         horsensWeatherData,
@@ -138,5 +157,8 @@ export function createViewModel(model) {
         copenhagenForecast,
         currentCity,
         getLastDaySummaryProperty,
+        generateNewWeatherData,
+        sendWeatherData,
+        newWeatherDataProperty,
     };
 }

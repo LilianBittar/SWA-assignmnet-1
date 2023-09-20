@@ -1,279 +1,16 @@
-<!-- <html>
-    <head>
-        <script
-			  src="https://code.jquery.com/jquery-3.7.1.min.js"
-			  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-			  crossorigin="anonymous"></script>
-		
-        <link rel="stylesheet" href="styles.css" />
-    </head>
-    <body>
-        <div>
-            <h1>Weather</h1>
-        </div>
-        <div>
-            <p> To <a href="index2.html"> get data by fetch</a>
-            </p>
-            
-        </div>
-        <div>
-            <h2>Horsens</h2>
-            <h3>Data</h3>
-            <table>
-                <thead>
-                    <th>Last day's max temperature</th>
-                    <th>Last day's min temperature</th>
-                    <th>Last day's total precipitation</th>
-                    <th>Last day's avg wind speed</th>
-                </thead>
-
-                <tbody id="horsens-summary">
-                    <tr id="horsens-last-day-data">
-                        <td>10 C</td>
-                        <td>0 C</td>
-                        <td>10 mm</td>
-                        <td>20 m/s</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="data-container">
-                <table>
-                    <th>Temperature</th>
-                    <th>Time</th>
-                    <tbody id="horsens-temperature-data">
-                        <tr id="horsens-latest-temperature-data">
-                            <td>10 C</td>
-                            <td>12.00.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Precipitaton</th>
-                    <th>Time</th>
-                    <th>Type</th>
-                    <tbody id="horsens-precipitation-data">
-                        <tr id="horsens-latest-precipitation-data">
-                            <td>10 mm</td>
-                            <td>12.00.0</td>
-                            <td>sleet</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Wind Speed</th>
-                    <th>Time</th>
-                    <th>Direction</th>
-                    <tbody id="horsens-wind-data">
-                        <tr id="horsens-latest-wind-data">
-                            <td>10 m/s</td>
-                            <td>12.00.0</td>
-                            <td>North</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Cloud Coverage</th>
-                    <th>Time</th>
-                    <tbody id="horsens-cloud-data">
-                        <tr id="horsens-latest-cloud-data">
-                            <td>10 %</td>
-                            <td>12.00.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h3>Forecast</h3>
-            <div class="data-container">
-                <div id="horsens-temperature-forecast"></div>
-                <div id="horsens-precipitation-forecast"></div>
-                <div id="horsens-wind-forecast"></div>
-                <div id="horsens-cloud-forecast"></div>
-            </div>
-        </div>
-
-        <div>
-            <h2>Aarhus</h2>
-            <h3>Data</h3>
-            <table>
-                <thead>
-                    <th>Last day's max temperature</th>
-                    <th>Last day's min temperature</th>
-                    <th>Last day's total precipitation</th>
-                    <th>Last day's avg wind speed</th>
-                </thead>
-
-                <tbody id="aarhus-summary">
-                    <tr id="aarhus-last-day-data">
-                        <td>10 C</td>
-                        <td>0 C</td>
-                        <td>10 mm</td>
-                        <td>20 m/s</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="data-container">
-                <table>
-                    <th>Temperature</th>
-                    <th>Time</th>
-                    <tbody id="aarhus-temperature-data">
-                        <tr id="aarhus-latest-temperature-data">
-                            <td>10 C</td>
-                            <td>12.00.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Precipitaton</th>
-                    <th>Time</th>
-                    <th>Type</th>
-                    <tbody id="aarhus-precipitation-data">
-                        <tr id="aarhus-latest-precipitation-data">
-                            <td>10 mm</td>
-                            <td>12.00.0</td>
-                            <td>sleet</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Wind Speed</th>
-                    <th>Time</th>
-                    <th>Direction</th>
-                    <tbody id="aarhus-wind-data">
-                        <tr id="aarhus-latest-wind-data">
-                            <td>10 m/s</td>
-                            <td>12.00.0</td>
-                            <td>North</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Cloud Coverage</th>
-                    <th>Time</th>
-                    <tbody id="aarhus-cloud-data">
-                        <tr id="aarhus-latest-cloud-data">
-                            <td>10 %</td>
-                            <td>12.00.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3>Forecast</h3>
-            <div class="data-container">
-                <div id="aarhus-temperature-forecast"></div>
-                <div id="aarhus-precipitation-forecast"></div>
-                <div id="aarhus-wind-forecast"></div>
-                <div id="aarhus-cloud-forecast"></div>
-            </div>
-        </div>
-
-        <div>
-            <h2>Copenhagen</h2>
-            <h3>Data</h3>
-            <table>
-                <thead>
-                    <th>Last day's max temperature</th>
-                    <th>Last day's min temperature</th>
-                    <th>Last day's total precipitation</th>
-                    <th>Last day's avg wind speed</th>
-                </thead>
-
-                <tbody id="copenhagen-summary">
-                    <tr id="copenhagen-last-day-data">
-                        <td>10 C</td>
-                        <td>0 C</td>
-                        <td>10 mm</td>
-                        <td>20 m/s</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="data-container">
-                <table>
-                    <th>Temperature</th>
-                    <th>Time</th>
-                    <tbody id="copenhagen-temperature-data">
-                        <tr id="copenhagen-latest-temperature-data">
-                            <td>10 C</td>
-                            <td>12.00.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Precipitaton</th>
-                    <th>Time</th>
-                    <th>Type</th>
-                    <tbody id="copenhagen-precipitation-data">
-                        <tr id="copenhagen-latest-precipitation-data">
-                            <td>10 mm</td>
-                            <td>12.00.0</td>
-                            <td>sleet</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Wind Speed</th>
-                    <th>Time</th>
-                    <th>Direction</th>
-                    <tbody id="copenhagen-wind-data">
-                        <tr id="copenhagen-latest-wind-data">
-                            <td>10 m/s</td>
-                            <td>12.00.0</td>
-                            <td>North</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table>
-                    <th>Cloud Coverage</th>
-                    <th>Time</th>
-                    <tbody id="copenhagen-cloud-data">
-                        <tr id="copenhagen-latest-cloud-data">
-                            <td>10 %</td>
-                            <td>12.00.0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h3>Forecast</h3>
-            <div class="data-container">
-                <div id="copenhagen-temperature-forecast"></div>
-                <div id="copenhagen-precipitation-forecast"></div>
-                <div id="copenhagen-wind-forecast"></div>
-                <div id="copenhagen-cloud-forecast"></div>
-            </div>
-        </div>
-        <script type="text/javascript" src="/client.js"></script>
-        <script >
-
-        </script>
-    </body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
         <title>Weather Report (XmlHttpRequest)</title>
     </head>
 
     <body>
-        <h1>Weather Report</h1>
+        <h1>Weather Report - XHR</h1>
 
-        <select id="page-selector">
-            <option value="xhr">XML HTTP Request</option>
-            <option value="fetch">fetch</option>
-        </select>
+        <a href="/index2.html">Go to fetch page</a>
 
         <h2>Select City</h2>
         <select id="citySelector">
@@ -285,9 +22,32 @@
 
         <h2>Hourly Forecast (Next 24 Hours)</h2>
         <div id="hourlyForecast"></div>
+        <div class="data-container">
+            <div id="temperature-forecast"></div>
+            <div id="precipitation-forecast"></div>
+            <div id="wind-forecast"></div>
+            <div id="cloud-forecast"></div>
+        </div>
 
         <h2>Latest Measurements</h2>
         <div id="latestMeasurements"></div>
+        <table>
+            <thead>
+                <th>Last day's max temperature</th>
+                <th>Last day's min temperature</th>
+                <th>Last day's total precipitation</th>
+                <th>Last day's avg wind speed</th>
+            </thead>
+
+            <tbody id="summary">
+                <tr id="last-day-data">
+                    <td>10 C</td>
+                    <td>0 C</td>
+                    <td>10 mm</td>
+                    <td>20 m/s</td>
+                </tr>
+            </tbody>
+        </table>
 
         <h2>Summary (Last 24 Hours)</h2>
         <ul>
@@ -298,7 +58,9 @@
         </ul>
 
         <h2>Send Weather Data</h2>
-        <!-- Form elements to send data can be added here -->
+        <div id="post-data-preview"></div>
+        <button id="generate-data-btn">Generate</button>
+        <button id="send-data-btn">Send</button>
 
         <script src="/client.js"></script>
     </body>
